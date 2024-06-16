@@ -27,8 +27,12 @@ def lambda_handler(event, context):
                 'statusCode': 200,
                 'body': json.dumps(parsed_jokes[random_index])
             }
-
-
+        
+        if (path == '/api/meaningoflife'):
+            return {
+                'statusCode': 200,
+                'body': json.dumps('42')
+            }
 
     return {
         'statusCode': 404,
