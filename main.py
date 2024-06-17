@@ -28,10 +28,16 @@ def lambda_handler(event, context):
                 'body': json.dumps(parsed_jokes[random_index])
             }
         
-        if (path == '/api/meaningoflife'):
+        elif path == '/api/meaningoflife':
             return {
                 'statusCode': 200,
                 'body': json.dumps('42')
+            }
+
+        elif path == '/api/helloworld':
+            return {
+                'statusCode': 200,
+                'body': json.dumps('Hello World')
             }
 
     return {
