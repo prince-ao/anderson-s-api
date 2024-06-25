@@ -21,7 +21,7 @@ paths:
   /api/meaning-of-life:
     get:
       summary: Returns the meaning of life
-      response:
+      responses:
       '200':
         description: Returns the meaning of life
         content:
