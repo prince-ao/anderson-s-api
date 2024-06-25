@@ -1,149 +1,118 @@
 openapi: 3.0.0
 info:
-  title: Dummy API
-  description: A simple API to demonstrate OpenAPI specifications.
+  title: Intermediate Programming APIs
+  description: "APIs used by studentsin the CSC 211: intermediate programming."
   version: 1.0.0
 servers:
-  - url: https://api.example.com/v1
+  - url: https://su5r8ko64h.execute-api.us-east-1.amazonaws.com
     description: Main production server
-  - url: https://staging-api.example.com
-    description: Staging server
 paths:
-  /users:
+  /api/helloworld:
     get:
-      summary: List all users
-      description: Returns a list of all registered users.
+      summary: Returns "Hello World"
       responses:
         '200':
-          description: A list of users
+          description: Returns "Hello World"
           content:
-            application/json:
+            text/plain:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                type: string
+                example: "Hello World"
+  /api/meaning-of-life:
+    get:
+      summary: Returns the meaning of life
+      response:
+      '200':
+        description: Returns the meaning of life
+        content:
+          text/plain:
+            schema:
+              type: string
+  /api/jokes:
     post:
-      summary: Create a new user
-      description: Adds a new user to the system.
+      tags:
+        - Jokes
+      summery: Adds a joke to the list of jokes
       requestBody:
-        description: User object that needs to be added
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewUser'
+              type: object
+              properties:
+                joke:
+                  type: string
+              required:
+                - joke
       responses:
         '201':
-          description: User created successfully
+          description: Successfully appends the joke you submitted to the end of the list of jokes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Joke'
+        '422':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '400':
-          description: Invalid input
-  /users/{userId}:
+          description: Missing body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/jokes/random:
     get:
-      summary: Get a user by ID
-      description: Returns a single user.
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: ID of the user to return
-          schema:
-            type: string
+      tags:
+        - Jokes
+      summary: Returns a random joke
       responses:
         '200':
-          description: A single user
+          description: Returns a random joke
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
-    put:
-      summary: Update a user
-      description: Updates an existing user.
+                $ref: '#/components/schemas/Joke'
+  /api/jokes/{id}:
+    get:
+      tags:
+        - Jokes
+      summary: Returns joke by id
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
-          description: ID of the user to update
+          description: id of the joke
           schema:
-            type: string
-      requestBody:
-        description: Updated user object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
+            type: number
       responses:
         '200':
-          description: User updated successfully
-        '400':
-          description: Invalid input
-        '404':
-          description: User not found
-    delete:
-      summary: Delete a user
-      description: Deletes a user.
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: ID of the user to delete
-          schema:
-            type: string
-      responses:
-        '204':
-          description: User deleted successfully
-        '404':
-          description: User not found
-  /login:
-    post:
-      summary: Logs user into the system
-      description: Authenticates a user and returns a token.
-      requestBody:
-        description: Login credentials
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Login'
-      responses:
-        '200':
-          description: Successful login
+          description: Returns a joke by id
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-        '400':
-          description: Invalid username/password supplied
+                $ref: '#/components/schemas/Joke'
+        '404':
+          description: Joke id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    User:
+    Joke:
       type: object
       properties:
         id:
+          type: number
+          example: 7
+        joke:
           type: string
-        username:
-          type: string
-        email:
-          type: string
-    NewUser:
+          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
+    Error:
       type: object
       properties:
-        username:
+        error:
           type: string
-        email:
-          type: string
-        password:
-          type: string
-    Login:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-
