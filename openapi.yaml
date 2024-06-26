@@ -100,22 +100,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Joke:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 7
-        joke:
-          type: string
-          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
   /api/posts:
     post:
       summary: Creates a new post
@@ -155,3 +139,19 @@ components:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Joke:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 7
+        joke:
+          type: string
+          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
