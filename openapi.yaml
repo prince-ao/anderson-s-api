@@ -115,6 +115,12 @@ paths:
                   description: Content of the post
               required:
                 - desc
+      parameters:
+        - in: header
+          name: authentication
+          required: true
+          schema:
+            type: string
       responses:
         '201':
           description: Successfully adds your new post 
