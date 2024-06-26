@@ -102,6 +102,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /api/posts:
     post:
+      tags:
+        - Post
       summary: Creates a new post
       requestBody:
         required: true
