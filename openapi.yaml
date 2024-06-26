@@ -110,17 +110,10 @@ paths:
             schema:
               type: object
               properties:
-                auth:
-                  type: string
-                title:
-                  type: string
-                  description: Title of the post
-                desc:
+                body:
                   type: string
                   description: Content of the post
               required:
-                - auth
-                - title
                 - desc
       responses:
         '201':
@@ -133,6 +126,9 @@ paths:
                   id:
                     type: integer
                     description: ID of the created post
+                  text:
+                    type: string
+                    description: The content of the newly created post
         '400':
           description: Invalid Input
           content:
