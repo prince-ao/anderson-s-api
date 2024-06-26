@@ -116,3 +116,42 @@ components:
       properties:
         error:
           type: string
+  /api/posts:
+    post:
+      summary: Creates a new post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auth:
+                  type: string
+                title:
+                  type: string
+                  description: Title of the post
+                desc:
+                  type: string
+                  description: Content of the post
+              required:
+                - auth
+                - title
+                - desc
+      responses:
+        '201':
+          description: Successfully adds your new post 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the created post
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
