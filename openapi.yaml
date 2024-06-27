@@ -101,6 +101,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /api/posts:
+    get:
+      tags:
+        - Post
+      summary: Gets all recent posts
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Limit of posts to return
+      responses:
+      '200':
+        description: A list of the recent posts
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: 
+                  type: integer
+                  example: "The id of a post"
+                text:
+                  type: string
+                  example: "The text from a post"
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - Post
@@ -143,6 +176,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    
 components:
   schemas:
     Joke:
