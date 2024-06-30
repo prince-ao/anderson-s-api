@@ -102,7 +102,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /api/posts:
+    get:
+      tags:
+        - Post
+      summary: Gets all recent posts
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Limit of posts to return
+      responses:
+        '200':
+          description: A list of the recent posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                      description: "The id of a post"
+                    text:
+                      type: string
+                      description: "The text from a post"
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
+      tags:
+        - Post
       summary: Creates a new post
       requestBody:
         required: true
@@ -138,6 +173,38 @@ paths:
                     description: The content of the newly created post
         '400':
           description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/posts/{id}:
+    get:
+      tags:
+        - Post
+      summary: Returns post by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Returns a post with the specified id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    description: "The id of the post"
+                  text:
+                    type: string
+                    description: "The text from the requested post"
+        '400':
+          description: Invalid Input/ id not found
           content:
             application/json:
               schema:
