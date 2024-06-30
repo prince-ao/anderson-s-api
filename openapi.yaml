@@ -252,6 +252,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Post
+      summary: Deletes a post by id
+      parameters:
+        - name id:
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successfully deleted the post with the specified id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: "The id of the post"
+                  text:
+                    type: string
+                    description: "The content of the deleted post"
+        '400':
+          description: Invalid input / id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Joke:
