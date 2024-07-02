@@ -290,28 +290,20 @@ post:
 
  /api/users:
     get:
-      summary: Get all user IDs
-      description: This endpoint retrieves all user IDs.
+      summary: Get all user ids
+      security:
+        - BearerAuth: []
       responses:
         '200':
-          description: Successfully retrieved user IDs
+          description: List of user ids
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
-                  example: 12345
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal server error
+                  type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
 
   /api/users/{id}:
     get:
