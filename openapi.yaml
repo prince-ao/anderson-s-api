@@ -107,6 +107,11 @@ paths:
         - Post
       summary: Gets all recent posts
       parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
         - name: limit
           in: query
           schema:
@@ -152,8 +157,8 @@ paths:
               required:
                 - desc
       parameters:
-        - in: header
-          name: authentication
+        - name: authentication
+          in: header
           required: true
           schema:
             type: string
@@ -183,6 +188,11 @@ paths:
         - Post
       summary: Returns post by id
       parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -226,12 +236,17 @@ paths:
               required:
                 - desc
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: The id of the post
-        schema:
-          type: number
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
       responses:
         '200':
           description: Updated post with specified id with content provided
@@ -257,6 +272,11 @@ paths:
         - Post
       summary: Deletes a post by id
       parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
         - name id:
           in: path
           required: true
@@ -299,9 +319,8 @@ components:
       properties:
         error:
           type: string
-
-/api/sign-up:
-post:
+  /api/sign-up:
+    post:
       summary: Create a new user
       description: This endpoint allows a new user to sign up by providing their email, username, and password.
       requestBody:
