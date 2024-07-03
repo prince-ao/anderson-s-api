@@ -160,79 +160,50 @@ components:
           type: string
 
 /api/sign-up:
-post:
-      summary: Create a new user
-      description: This endpoint allows a new user to sign up by providing their email, username, and password.
-      requestBody:
-        required: true
+  post:
+    summary: Creates a new user
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+            required:
+              - email
+              - username
+              - password
+    responses:
+      '201':
+        description: User created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      '400':
+        description: Invalid input data
         content:
           application/json:
             schema:
               type: object
               properties:
-                email:
+                message:
                   type: string
-                  format: email
-                  example: user@example.com
-                username:
+      '409':
+        description: User already exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
                   type: string
-                  example: john_doe
-                password:
-                  type: string
-                  example: securePassword123
-              required:
-                - email
-                - username
-                - password
-      responses:
-        '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: 12345
-                  email:
-                    type: string
-                    format: email
-                    example: user@example.com
-                  username:
-                    type: string
-                    example: john_doe
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Invalid input data
-        '409':
-          description: User already exists
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User already exists
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal server error   zxxc 
-
 
 /api/login:
     post:
@@ -476,3 +447,15 @@ post:
                   message:
                     type: string
                     example: Internal server error
+
+
+
+
+
+
+
+
+
+
+
+
