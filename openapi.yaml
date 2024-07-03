@@ -124,16 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id: 
-                      type: integer
-                      description: "The id of a post"
-                    text:
-                      type: string
-                      description: "The text from a post"
+                $ref: '#/components/schemas/Post' 
         '400':
           description: Invalid Input
           content:
@@ -168,14 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: ID of the created post
-                  text:
-                    type: string
-                    description: The content of the newly created post
+                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid Input
           content:
@@ -205,14 +189,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id: 
-                    type: integer
-                    description: "The id of the post"
-                  text:
-                    type: string
-                    description: "The text from the requested post"
+                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid input / id not found
           content:
@@ -253,14 +230,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id: 
-                    type: integer
-                    description: "The id of the post"
-                  text:
-                    type: string
-                    description: "The new content of the post"
+                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid input / id not found
           content:
@@ -289,14 +259,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: "The id of the post"
-                  text:
-                    type: string
-                    description: "The content of the deleted post"
+                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid input / id not found
           content:
@@ -319,6 +282,15 @@ components:
       properties:
         error:
           type: string
+    Post:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The id of the post
+        text: 
+          type: string
+          description: The text of the post
   /api/sign-up:
     post:
       summary: Create a new user
@@ -391,9 +363,7 @@ components:
                 properties:
                   message:
                     type: string
-                    example: Internal server error   zxxc 
-
-
+                    example: Internal server error 
 /api/login:
     post:
       summary: Log in a user
