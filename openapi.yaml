@@ -361,46 +361,36 @@ components:
                   type: string
 
     delete:
-      summary: Delete a user by ID
-      description: This endpoint deletes a user by their ID.
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: The user ID
-      responses:
-        '200':
-          description: Successfully deleted user
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User deleted successfully
-        '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User not found
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal server error
+    summary: Delete user by id
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: User deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      '401':
+        $ref: '#/components/responses/UnauthorizedError'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
 
 
 
