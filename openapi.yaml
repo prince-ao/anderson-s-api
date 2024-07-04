@@ -107,6 +107,11 @@ paths:
         - Post
       summary: Gets all recent posts
       parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
         - name: limit
           in: query
           schema:
@@ -119,16 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id: 
-                      type: integer
-                      description: "The id of a post"
-                    text:
-                      type: string
-                      description: "The text from a post"
+                $ref: '#/components/schemas/Post' 
         '400':
           description: Invalid Input
           content:
@@ -152,8 +148,8 @@ paths:
               required:
                 - desc
       parameters:
-        - in: header
-          name: authentication
+        - name: authentication
+          in: header
           required: true
           schema:
             type: string
@@ -163,14 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: ID of the created post
-                  text:
-                    type: string
-                    description: The content of the newly created post
+                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid Input
           content:
@@ -183,6 +172,11 @@ paths:
         - Post
       summary: Returns post by id
       parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -195,36 +189,83 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id: 
-                    type: integer
-                    description: "The id of the post"
-                  text:
-                    type: string
-                    description: "The text from the requested post"
+                $ref: '#/components/schemas/Post'
         '400':
-          description: Invalid Input/ id not found
+          description: Invalid input / id not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Joke:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 7
-        joke:
-          type: string
-          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
+    put:
+      tags:
+        - Post
+      summary: Updates a post by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  description: Content used to update post
+              required:
+                - desc
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Updated post with specified id with content provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input / id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Post
+      summary: Deletes a post by id
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name id:
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successfully deleted the post with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input / id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 /api/sign-up:
   post:
@@ -383,7 +424,13 @@ components:
                 properties:
                   message:
                     type: string
-                    example: Internal server error
+                    example: Internal server error 
+/api/login:
+    post:
+      summary: Log in a user
+      description: This endpoint logs in a user by verifying their email and password.
+      requestBody:
+      example: Internal server error
 
      put:
     summary: Change the information of a user
@@ -460,10 +507,31 @@ components:
                   type: string
 
 
-
-
 components:
   schemas:
+    Joke:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 7
+        joke:
+          type: string
+          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    Post:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The id of the post
+        text: 
+          type: string
+          description: The text of the post
     User:
       type: object
       properties:
