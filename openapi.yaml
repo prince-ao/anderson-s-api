@@ -266,6 +266,247 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+/api/sign-up:
+  post:
+    summary: Creates a new user
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+            required:
+              - email
+              - username
+              - password
+    responses:
+      '201':
+        description: User created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      '400':
+        description: Invalid input data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      '409':
+        description: User already exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+/api/login:
+  post:
+    summary: Logs user in
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+            required:
+              - email
+              - password
+    responses:
+      '200':
+        description: Successful login
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      '400':
+        description: Invalid input data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      '401':
+        description: Invalid email or password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+ 
+
+ /api/users:
+    get:
+      summary: Get all user ids
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of user ids
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/users/{id}:
+    get:
+      summary: Get a user's info by ID
+      description: This endpoint retrieves a user's information by their ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The user ID
+      responses:
+        '200':
+          description: Successfully retrieved user information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 12345
+                  email:
+                    type: string
+                    format: email
+                    example: user@example.com
+                  username:
+                    type: string
+                    example: john_doe
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error 
+/api/login:
+    post:
+      summary: Log in a user
+      description: This endpoint logs in a user by verifying their email and password.
+      requestBody:
+      example: Internal server error
+
+     put:
+    summary: Change the information of a user
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+    responses:
+      '200':
+        description: User updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      '401':
+        $ref: '#/components/responses/UnauthorizedError'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+
+    delete:
+    summary: Delete user by id
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: User deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      '401':
+        $ref: '#/components/responses/UnauthorizedError'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+
+
 components:
   schemas:
     Joke:
@@ -291,128 +532,37 @@ components:
         text: 
           type: string
           description: The text of the post
-  /api/sign-up:
-    post:
-      summary: Create a new user
-      description: This endpoint allows a new user to sign up by providing their email, username, and password.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                username:
-                  type: string
-                  example: john_doe
-                password:
-                  type: string
-                  example: securePassword123
-              required:
-                - email
-                - username
-                - password
-      responses:
-        '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: 12345
-                  email:
-                    type: string
-                    format: email
-                    example: user@example.com
-                  username:
-                    type: string
-                    example: john_doe
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Invalid input data
-        '409':
-          description: User already exists
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User already exists
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal server error 
-/api/login:
-    post:
-      summary: Log in a user
-      description: This endpoint logs in a user by verifying their email and password.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                password:
-                  type: string
-                  example: securePassword123
-              required:
-                - email
-                - password
-      responses:
-        '200':
-          description: User logged in successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                    example: jwt_token
-        '401':
-          description: Invalid email or password
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Invalid email or password
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal server error
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        username:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    UnauthorizedError:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Authentication required      
+
+
+
+
+
+
+
