@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Intermediate Programming APIs
-  description: "APIs used by studentsin the CSC 211: intermediate programming."
+  description: "APIs used by students in the CSC 211: intermediate programming."
   version: 1.0.0
 servers:
   - url: https://su5r8ko64h.execute-api.us-east-1.amazonaws.com
@@ -22,18 +22,19 @@ paths:
     get:
       summary: Returns the meaning of life
       responses:
-      '200':
-        description: Returns the meaning of life
-        content:
-          text/plain:
-            schema:
-              type: string
-      
+        '200':
+          description: Returns the meaning of life
+          content:
+            text/plain:
+              schema:
+                type: string
+
+# Start of jokes section
   /api/jokes:
     post:
       tags:
         - Jokes
-      summery: Adds a joke to the list of jokes
+      summary: Adds a joke to the list of jokes
       requestBody:
         required: true
         content:
@@ -101,9 +102,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+# Start of posts section
   /api/posts:
+    get:
+      tags:
+        - Post
+      summary: Gets all recent posts
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Limit of posts to return
+      responses:
+        '200':
+          description: A list of the recent posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post' 
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
+      tags:
+        - Post
       summary: Creates a new post
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -115,156 +155,212 @@ paths:
                   type: string
                   description: Content of the post
               required:
-                - desc
-      parameters:
-        - in: header
-          name: authentication
-          required: true
-          schema:
-            type: string
+                - body
       responses:
         '201':
           description: Successfully adds your new post 
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: ID of the created post
-                  text:
-                    type: string
-                    description: The content of the newly created post
+                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid Input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Joke:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 7
-        joke:
-          type: string
-          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-
-/api/sign-up:
-  post:
-    summary: Creates a new user
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-              username:
-                type: string
-              password:
-                type: string
-            required:
-              - email
-              - username
-              - password
-    responses:
-      '201':
-        description: User created successfully
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      '400':
-        description: Invalid input data
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-      '409':
-        description: User already exists
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-/api/login:
-  post:
-    summary: Logs user in
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-              password:
-                type: string
-            required:
-              - email
-              - password
-    responses:
-      '200':
-        description: Successful login
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-      '400':
-        description: Invalid input data
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-      '401':
-        description: Invalid email or password
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
- 
-
- /api/users:
+  /api/posts/{id}:
     get:
-      summary: Get all user ids
+      tags:
+        - Post
+      summary: Returns post by id
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Returns a post with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input / id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Post
+      summary: Updates a post by id
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  description: Content used to update post
+              required:
+                - desc
+      responses:
+        '200':
+          description: Updated post with specified id with content provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input / id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Post
+      summary: Deletes a post by id
+      parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: The id of the post
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successfully deleted the post with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input / id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+# Start of user section
+  /api/sign-up:
+    post:
+      summary: Creates a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - username
+                - password
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/login:
+    post:
+      summary: Logs user in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/users:
+    get:
+      summary: Get all user
       security:
         - BearerAuth: []
       responses:
         '200':
-          description: List of user ids
+          description: List of user
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: integer
+                  $ref: '#/components/schemas/User'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -273,6 +369,11 @@ components:
       summary: Get a user's info by ID
       description: This endpoint retrieves a user's information by their ID.
       parameters:
+        - name: authentication
+          in: header
+          required: true
+          schema:
+            type: string
         - in: path
           name: id
           required: true
@@ -307,8 +408,40 @@ components:
                   message:
                     type: string
                     example: User not found
-        '500':
-          description: Internal server error
+    put:
+      summary: Change the information of a user
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: User not found
           content:
             application/json:
               schema:
@@ -316,87 +449,68 @@ components:
                 properties:
                   message:
                     type: string
-                    example: Internal server error
-
-     put:
-    summary: Change the information of a user
-    security:
-      - BearerAuth: []
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-              username:
-                type: string
-              password:
-                type: string
-    responses:
-      '200':
-        description: User updated successfully
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      '401':
-        $ref: '#/components/responses/UnauthorizedError'
-      '404':
-        description: User not found
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-
     delete:
-    summary: Delete user by id
-    security:
-      - BearerAuth: []
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-    responses:
-      '200':
-        description: User deleted successfully
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-      '401':
-        $ref: '#/components/responses/UnauthorizedError'
-      '404':
-        description: User not found
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-
-
-
-
+      summary: Delete user by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 components:
   schemas:
+    Joke:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 7
+        joke:
+          type: string
+          example: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    Post:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The id of the post
+        text: 
+          type: string
+          description: The text of the post
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token for authorization. Keep it safe!
     User:
       type: object
       properties:
